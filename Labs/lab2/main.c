@@ -16,7 +16,7 @@ using namespace aocl_utils;
 void cleanup();
 #endif
 
-// Global Definitions
+// Macros
 #define TERM_NUM 64
 #define GROUP_SIZE 32
 #define LOCAL_SIZE 1
