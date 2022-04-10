@@ -189,8 +189,7 @@ int main()
 
     /* Global reduction */
     float pi = 0;
-    for(int i = 0; i < GROUP_SIZE; i++)
-    {
+    for(int i = 0; i < GROUP_SIZE; i++){
       pi += global_results[i];  // add all the results together
     }
     pi = pi * 4;
