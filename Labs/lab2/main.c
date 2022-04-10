@@ -197,10 +197,10 @@ int main()
 
     /* Show results */
     printf("Leibniz Formula Calculating pi: \n");
-    printf("\t Terms Calculated: %d \n", term_num);
-    printf("\t Global Size: %d \n", global_size);
-    printf("\t Local Size: %d \n", local_size);
-    printf("\t Final Result: %f \n", pi);
+    printf("Terms Calculated: %d \n", term_num);
+    printf("Global Size: %d \n", global_size);
+    printf("Local Size: %d \n", local_size);
+    printf("Final Result: %f \n", pi);
 
     /* free resources */
     free(global_results);
