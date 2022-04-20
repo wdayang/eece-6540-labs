@@ -55,16 +55,7 @@ static char dev_name[DEVICE_NAME_LEN];
 void ImageRotation(queue &q, void *image_in, void *image_out,
                size_t ImageRows, size_t ImageCols)
 {
-  // We create images for the input and output data.
-  // Images objects are created from a host pointer together with provided
-  // channel order and channel type.
-  // image_in is a host side buffer of size ImageRows x ImageCols
-  // each data item in image_in is float, representing a pixel
-  // In the example file cat.bmp, each pixel is of 8-bit color, so we just
-  // use "r" as channel order which replicates the value in all R component
-  // in the image object
-  // The channel type is set as fp32
-  //
+  // Image object are use to store the input and output iamges
   image<2> srcImage(image_in, image_channel_order::r, image_channel_type::fp32,
                     range<2>(ImageCols, ImageRows));
 
