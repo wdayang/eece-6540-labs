@@ -135,7 +135,7 @@ void ImageRotation(queue &q, void *image_in, void *image_out,
                     addressing_mode::clamp, filtering_mode::nearest);
 
       // angle to rotate image by
-      float theta = 315.0;
+      float theta = 0.4;
 
       // Use parallel_for to run image convolution in parallel on device. This
       // executes the kernel.
