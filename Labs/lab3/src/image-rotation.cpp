@@ -1,4 +1,14 @@
-// Image Rotation with DPC++
+//==============================================================
+// DPC++ Example
+//
+// Image rotation with DPC++
+//
+// Author: Yan Luo
+//
+// Copyright ©  2020-
+//
+// MIT License
+//
 
 #include <CL/sycl.hpp>
 #include <array>
@@ -38,51 +48,6 @@ static const char *inputImagePath = "./Images/cat.bmp";
 #define MAX_SOURCE_SIZE (0x100000)
 #define DEVICE_NAME_LEN 128
 static char dev_name[DEVICE_NAME_LEN];
-
-#if 1
-class IntMatrix
-{
-public:
-  size_t row, column;
-  std::vector<int> elements;
-
-  IntMatrix(size_t r, size_t c, int initVal)
-  {
-    row = r;
-    column = c;
-    elements = std::vector<int>(r * c, initVal);
-  }
-  int e(size_t r, size_t c)
-  {
-    return elements[r * column + c];
-  }
-};
-// matrice shapes for this example.
-constexpr size_t a_rows = 200;
-constexpr size_t a_columns = 400;
-constexpr size_t b_columns = 600;
-
-// matrix A size: a_rows x a_columns
-// matrix B size: a_columns x b_columns
-// matrices C an D size: a_rows x b_columns
-
-#endif
-
-float4 *pixel2rgba(float *image_in, size_t ImageRows, size_t ImageCols, image_channel_order chan_order)
-{
-  // allocate spaces
-  float4 *ret = (float4 *)malloc(ImageRows * ImageCols * sizeof(float4));
-  if (chan_order == image_channel_order::luminance)
-  {
-    return ret;
-  }
-  else
-  {
-    std::cout << "ERROR: unknown image channel order" << std::endl;
-    free(ret);
-    return NULL;
-  }
-}
 
 //************************************
 // Image Rotation in DPC++ on device:
