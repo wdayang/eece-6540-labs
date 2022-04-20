@@ -84,8 +84,9 @@ void ImageRotation(queue &q, void *image_in, void *image_out,
       sampler mysampler(coordinate_normalization_mode::unnormalized,
                     addressing_mode::clamp, filtering_mode::nearest);
 
-      // rotate the image by an angle of
+      // rotate the image by an angle of, and the center is set to 0 as default
       float theta = 0.4;
+      float2 center = {0.0f, 0.0f}
 
       // Use parallel_for to run image convolution in parallel on device. This
       // executes the kernel.
@@ -95,37 +96,24 @@ void ImageRotation(queue &q, void *image_in, void *image_out,
       // DPC++ supports unnamed lambda kernel by default.
       h.parallel_for(num_items, [=](id<2> item) 
       { 
-
-        // get row and col of the pixel assigned to this work item
         int source_x = item[0];
         int source_y = item[1];
 
-        // DPC++ Coordinate objects for source and desintation locations
         int2 source_coords;
         int2 destination_coords;
-
-        // Set source coordinates 
         source_coords[0] = source_x;
         source_coords[1] = source_y;
 
-        // Initalize output pixel
         float4 sum = {0.0f, 0.0f, 0.0f, 0.0f};
-
-        // Get source pixel and assign value to sum
         float4 pixel = srcPtr.read(source_coords, mysampler);
         sum[0] = pixel[0];
 
-        // Calculate new position of pixel
-        float destination_x = cos(theta)*source_x - sin(theta)*source_y;
-        float destination_y = sin(theta)*source_x + cos(theta)*source_y;
-
-        // Set destination coordinates 
+        float destination_x = cos(theta)*(source_x-center[0]) - sin(theta)*(source_y-center[0]);
+        float destination_y = sin(theta)*(source_x-center[0]) + cos(theta)*(source_y-center[0]);
         destination_coords[0] = int(destination_x);
         destination_coords[1] = int(destination_y);
 
-        // Range checking
-        if (destination_coords[0] >= 0 && destination_coords[0] < ImageCols &&
-            destination_coords[1] >= 0 && destination_coords[1] < ImageRows){
+        if (destination_coords[0] >= 0 && destination_coords[0] < ImageCols && destination_coords[1] >= 0 && destination_coords[1] < ImageRows){
               dstPtr.write(destination_coords, sum);
           }
       }
