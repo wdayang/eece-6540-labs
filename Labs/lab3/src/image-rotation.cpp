@@ -96,26 +96,24 @@ void ImageRotation(queue &q, void *image_in, void *image_out,
       // DPC++ supports unnamed lambda kernel by default.
       h.parallel_for(num_items, [=](id<2> item) 
       { 
-        int source_x = item[0];
-        int source_y = item[1];
+        int2 source;
+        int2 coord_dest;
 
-        int2 source_coords;
-        int2 destination_coords;
-        source_coords[0] = source_x;
-        source_coords[1] = source_y;
+        source[0] = item[0];
+        source[1] = item[1];
 
         float4 sum = {0.0f, 0.0f, 0.0f, 0.0f};
-        float4 pixel = srcPtr.read(source_coords, mysampler);
+        float4 pixel = srcPtr.read(source, mysampler); //read the source image
         sum[0] = pixel[0];
 
-        float destination_x = cos(theta)*(source_x-center[0]) - sin(theta)*(source_y-center[0]);
-        float destination_y = sin(theta)*(source_x-center[0]) + cos(theta)*(source_y-center[0]);
-        destination_coords[0] = int(destination_x);
-        destination_coords[1] = int(destination_y);
+        float x_dest = cos(theta)*(source[0]-center[0]) - sin(theta)*(source[1]-center[0]);
+        float y_dest = sin(theta)*(source[0]-center[0]) + cos(theta)*(source[1]-center[0]);
+        coord_dest[0] = int(x_dest);
+        coord_dest[1] = int(y_dest);
 
-        if (destination_coords[0] >= 0 && destination_coords[0] < ImageCols && destination_coords[1] >= 0 && destination_coords[1] < ImageRows){
-              dstPtr.write(destination_coords, sum);
-          }
+        if (coord_dest[0] >= 0 && coord_dest[0] < ImageCols && coord_dest[1] >= 0 && coord_dest[1] < ImageRows){
+                  dstPtr.write(coord_dest, sum);
+                  }
       }
     ); });
 }
