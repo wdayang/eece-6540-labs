@@ -84,8 +84,8 @@ void ImageRotation(queue &q, void *image_in, void *image_out,
       sampler mysampler(coordinate_normalization_mode::unnormalized,
                     addressing_mode::clamp, filtering_mode::nearest);
 
-      // rotate by an angle of 90
-      float theta = 90;
+      // rotate by an angle of 15
+      float theta = 15;
       //set the center as 0 by default
       int center_x = 0;
       int center_y = 0;
