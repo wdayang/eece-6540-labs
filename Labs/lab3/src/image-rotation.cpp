@@ -52,15 +52,11 @@ static char dev_name[DEVICE_NAME_LEN];
 //************************************
 // Image Rotation in DPC++ on device:
 //************************************
-void ImageRotation(queue &q, void *image_in, void *image_out,
-               size_t ImageRows, size_t ImageCols)
+void ImageRotation(queue &q, void *image_in, void *image_out, size_t ImageRows, size_t ImageCols)
 {
   // Image object are use to store the input and output iamges
-  image<2> In_Image(image_in, image_channel_order::r, image_channel_type::fp32,
-                    range<2>(ImageCols, ImageRows));
-
-  image<2> Out_Image(image_out, image_channel_order::r, image_channel_type::fp32,
-                    range<2>(ImageCols, ImageRows));
+  image<2> In_Image(image_in, image_channel_order::r, image_channel_type::fp32, range<2>(ImageCols, ImageRows));
+  image<2> Out_Image(image_out, image_channel_order::r, image_channel_type::fp32, range<2>(ImageCols, ImageRows));
 
   // Create the range object for the pixel data managed by the image.
   range<2> num_items{ImageCols, ImageRows};
@@ -74,15 +70,11 @@ void ImageRotation(queue &q, void *image_in, void *image_out,
       // When accessing images, the accessor element type is used to specify 
       // how the image should be read from or written to. 
       // It can be either int4, uint4 or float4. 
-      accessor<float4, 2, access::mode::read, access::target::image> acc_in(
-        In_Image, h);
-
-      accessor<float4, 2, access::mode::write, access::target::image> acc_out(
-        Out_Image, h);
+      accessor<float4, 2, access::mode::read, access::target::image> acc_in(In_Image, h);
+      accessor<float4, 2, access::mode::write, access::target::image> acc_out(Out_Image, h);
 
       // Sampler are used to regulate access of the image
-      sampler mysampler(coordinate_normalization_mode::unnormalized,
-                    addressing_mode::clamp, filtering_mode::nearest);
+      sampler mysampler(coordinate_normalization_mode::unnormalized, addressing_mode::clamp, filtering_mode::nearest);
 
       float theta = 0.4; //2Pi is a circle
       float2 center = {0.0f, 0.0f}; //the source is set to be 0
