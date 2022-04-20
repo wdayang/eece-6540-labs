@@ -74,10 +74,10 @@ void ImageRotation(queue &q, void *image_in, void *image_out,
       // When accessing images, the accessor element type is used to specify 
       // how the image should be read from or written to. 
       // It can be either int4, uint4 or float4. 
-      accessor<float4, 2, access::mode::read, access::target::image> srcPtr(
+      accessor<float4, 2, access::mode::read, access::target::image> acc_in(
         In_Image, h);
 
-      accessor<float4, 2, access::mode::write, access::target::image> dstPtr(
+      accessor<float4, 2, access::mode::write, access::target::image> acc_out(
         Out_Image, h);
 
       // Sampler are used to regulate access of the image
@@ -103,7 +103,7 @@ void ImageRotation(queue &q, void *image_in, void *image_out,
         source[1] = item[1];
 
         float4 sum = {0.0f, 0.0f, 0.0f, 0.0f};
-        float4 pixel = srcPtr.read(source, mysampler); //read the source image
+        float4 pixel = acc_in.read(source, mysampler); //read the source image
         sum[0] = pixel[0];
 
         float x_dest = cos(theta)*(source[0]-center[0]) - sin(theta)*(source[1]-center[0]);
@@ -112,7 +112,7 @@ void ImageRotation(queue &q, void *image_in, void *image_out,
         coord_dest[1] = int(y_dest);
 
         if (coord_dest[0] >= 0 && coord_dest[0] < ImageCols && coord_dest[1] >= 0 && coord_dest[1] < ImageRows){
-                  dstPtr.write(coord_dest, sum);
+                  acc_out.write(coord_dest, sum);
                   }
       }
     ); });
