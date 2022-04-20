@@ -56,10 +56,10 @@ void ImageRotation(queue &q, void *image_in, void *image_out,
                size_t ImageRows, size_t ImageCols)
 {
   // Image object are use to store the input and output iamges
-  image<2> srcImage(image_in, image_channel_order::r, image_channel_type::fp32,
+  image<2> In_Image(image_in, image_channel_order::r, image_channel_type::fp32,
                     range<2>(ImageCols, ImageRows));
 
-  image<2> dstImage(image_out, image_channel_order::r, image_channel_type::fp32,
+  image<2> Out_Image(image_out, image_channel_order::r, image_channel_type::fp32,
                     range<2>(ImageCols, ImageRows));
 
   // Create the range object for the pixel data managed by the image.
@@ -75,10 +75,10 @@ void ImageRotation(queue &q, void *image_in, void *image_out,
       // how the image should be read from or written to. 
       // It can be either int4, uint4 or float4. 
       accessor<float4, 2, access::mode::read, access::target::image> srcPtr(
-        srcImage, h);
+        In_Image, h);
 
       accessor<float4, 2, access::mode::write, access::target::image> dstPtr(
-        dstImage, h);
+        Out_Image, h);
 
       // Sampler are used to regulate access of the image
       sampler mysampler(coordinate_normalization_mode::unnormalized,
