@@ -65,19 +65,15 @@ void ImageRotation(queue &q, void *image_in, void *image_out, size_t ImageRows, 
   // data access permission and device computation (kernel).
   q.submit([&](handler &h)
            {
-      // Create an accessor to image with access permission: read, write or
-      // read/write. The accessor is a way to access the memory in the image.
-      // When accessing images, the accessor element type is used to specify 
-      // how the image should be read from or written to. 
-      // It can be either int4, uint4 or float4. 
+      // Accessor to the Image object
       accessor<float4, 2, access::mode::read, access::target::image> acc_in(In_Image, h);
       accessor<float4, 2, access::mode::write, access::target::image> acc_out(Out_Image, h);
 
       // Sampler are used to regulate access of the image
       sampler mysampler(coordinate_normalization_mode::unnormalized, addressing_mode::clamp, filtering_mode::nearest);
 
-      float theta = 0.4; //2Pi is a circle
-      float2 center = {0.0f, 0.0f}; //the source is set to be 0
+      float theta = 0.4; // 2Pi is a circle
+      float2 center = {0.0f, 0.0f}; // the source is set to be 0
 
       // Use parallel_for to run image convolution in parallel on device. This
       // executes the kernel.
@@ -97,7 +93,7 @@ void ImageRotation(queue &q, void *image_in, void *image_out, size_t ImageRows, 
         float4 pixel = acc_in.read(source, mysampler); //read the source image
         sum[0] = pixel[0];
 
-        float x_dest = cos(theta)*(source[0]-center[0]) - sin(theta)*(source[1]-center[0]);
+        float x_dest = cos(theta)*(source[0]-center[0]) - sin(theta)*(source[1]-center[0]); //calculate the new coordinate after rotation
         float y_dest = sin(theta)*(source[0]-center[0]) + cos(theta)*(source[1]-center[0]);
         coord_dest[0] = int(x_dest);
         coord_dest[1] = int(y_dest);
