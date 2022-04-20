@@ -86,7 +86,7 @@ void ImageRotation(queue &q, void *image_in, void *image_out,
 
       // rotate the image by an angle of, and the center is set to 0 as default
       float theta = 0.4;
-      float2 center = {0.0f, 0.0f}
+      float2 center = {0.0f, 0.0f};
 
       // Use parallel_for to run image convolution in parallel on device. This
       // executes the kernel.
