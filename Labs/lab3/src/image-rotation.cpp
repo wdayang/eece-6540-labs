@@ -89,17 +89,11 @@ void ImageRotation(queue &q, void *image_in, void *image_out,
       accessor<float4, 2, access::mode::write, access::target::image> dstPtr(
         dstImage, h);
 
-      // Samplers are used to specify the way in which the coordinates map to
-      // a particular pixel in the image. 
-      // In our example, we specify 
-      //  (1) the sampler will not use normalized co-ordinates, 
-      //  (2) addresses outside the image bounds should clamp to the edge of the image 
-      //  (3) and floating-point co-ordinates should take the nearest pixel's data,
-      //      rather that applying (for example) a linear filter.
+      // Sampler are used to regulate access of the image
       sampler mysampler(coordinate_normalization_mode::unnormalized,
                     addressing_mode::clamp, filtering_mode::nearest);
 
-      // angle to rotate image by
+      // rotate the image by an angle of
       float theta = 0.4;
 
       // Use parallel_for to run image convolution in parallel on device. This
@@ -141,7 +135,6 @@ void ImageRotation(queue &q, void *image_in, void *image_out,
         // Range checking
         if (destination_coords[0] >= 0 && destination_coords[0] < ImageCols &&
             destination_coords[1] >= 0 && destination_coords[1] < ImageRows){
-              printf("Pixel %d, %d, (%d) rotated to %d, %d \n", source_x, source_y, sum[0], destination_coords[0], destination_coords[1]);
               dstPtr.write(destination_coords, sum);
           }
       }
@@ -194,14 +187,13 @@ int main()
   }
   catch (exception const &e)
   {
-    std::cout << "An exception is caught for image convolution.\n";
+    std::cout << "An exception is caught for image rotation.\n";
     std::terminate();
   }
-
   std::cout << t.elapsed().count() << " seconds\n";
 
   /* Save the output bmp */
-  printf("Output image saved as: cat-rotated.bmp\n");
+  printf("Successful! the output image is saved as: cat-rotated.bmp\n");
   writeBmpFloat(hOutputImage, "cat-rotated.bmp", imageRows, imageCols,
                 inputImagePath);
 
